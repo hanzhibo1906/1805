@@ -1,0 +1,130 @@
+<form class="layui-form">
+    <div class="layui-form-item">
+        <label class="layui-form-label">名称</label>
+        <div class="layui-input-inline">
+            <input type="text" name="admin_name"  lay-verify="required|username" autocomplete="off" placeholder="请输入名称" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">密码</label>
+        <div class="layui-input-inline">
+            <input type="password" name="admin_pwd" id='pwd1' lay-verify="required|pwd1" placeholder="请输入密码" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">确认密码</label>
+        <div class="layui-input-inline">
+            <input type="password" name="" id="pwd2" lay-verify="required|pwd2" placeholder="请再次确认密码" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">邮箱</label>
+            <div class="layui-input-inline">
+                <input type="text" name="admin_email" lay-verify="required|email" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">手机</label>
+            <div class="layui-input-inline">
+                <input type="tel" name="admin_tel" lay-verify="required|phone" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">系统角色</label>
+            {volist  name='role' id='v'}
+            <div class="layui-input-block" style="width: 500px">
+                <input type="checkbox" class="role" name="role[]"
+                       lay-skin="primary" value="{$v.role_id}" lay-filter="role" title="{$v.role_name}">
+                <div style="margin-top: 10px;color: rgba(0, 0, 0, 0.45);margin-left: 25px">
+                    <span style="color: blue">权限:</span>
+                    <span>{$v.node_all}</span>
+                </div>
+            </div>
+
+            {/volist}
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="*">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+<script>
+   $(function(){
+       layui.use(['form','layer'], function(){
+           var form = layui.form;
+           var layer = layui.layer;
+
+           //表单验证
+           form.verify({
+               username:function(value,item){   //value表单的值，item表单的属性
+                   var font;
+                   var username_reg = /^[a-z_]\w{3,11}$/i;
+                   if(!username_reg.test(value)){
+                       return '用户名数字,字母,下划线,非数字开头,4-12位';
+                   }else{
+                       $.ajax({
+                           url: "{:url('Admin/checkName')}",
+                           type:'post',
+                           data:{admin_name:value},
+                           async:false,
+                           success:function(msg){
+                               console.log(msg);
+                               if(msg=='no'){
+                                   font='用户名已存在';
+                               }
+                           }
+                       });
+                       return font;
+                   }
+               },
+               pwd1:function(value,item){      //value表单的值，item表单的属性
+                   var pwd_reg = /^.{6,}$/i;
+                   if(!pwd_reg.test(value)){
+                       return '密码6-8位';
+                   }
+               },
+               pwd2:function(value,item){ //value表单的值，item表单的属性
+                   var pwdVal=$('#pwd2').val();
+                   if(value!=pwdVal){
+                       return '确认密码必须与密码一致';
+                   }
+               }
+           });
+
+           form.on('submit(*)', function(data){
+               $.post(
+                       "{:url('Admin/adminAdd')}",
+                        data.field,
+                        function( json_info ){
+                            if(json_info.status == 1000){
+                                location.href="{:url('Admin/adminList')}";
+                            }else{
+                                layer.msg( json_info.msg );
+                            }
+                        },
+                       'json'
+               );
+
+
+
+                //console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+               return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+           });
+       });
+   })
+
+
+
+</script>
+

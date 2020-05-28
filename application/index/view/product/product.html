@@ -1,0 +1,25 @@
+<ul class="cate_list">
+    {volist name="product_list" id='v'}
+        <li>
+            <a href="{:url('product/productDetail',['id'=>$v['sku_id']])}">
+                <div class="img">
+                    <img src="__PUBLIC__{$v.goods_goods_img}" width="210" height="185" />
+                </div>
+                <div class="price">
+                    <font>￥<span>{:number_format($v['sku_price'] , 2,'.',',' )}</span></font> &nbsp;
+                </div>
+                <div class="name" style="height: 45px">{$v.sku_name}<br/>
+                <span style="margin-left: 10px">销量:<span style="color: #ff6620">{:formatSale($v['sku_sale_number'])}</span></span>
+                </div>
+            </a>
+            <div class="carbg">
+                <a href="javascript:;" class="ss">收藏</a>
+                <a href="javascript:;" class="j_car">加入购物车</a>
+            </div>
+        </li>
+    {/volist}
+</ul>
+<div class="pages" >
+    {$page_str}
+    <!--<a href="javascript:;" class="p_pre">上一页</a><a href="javascript:;" class="cur">1</a><a href="javascript:;">2</a><a href="javascript:;">3</a>...<a href="javascript:;">20</a><a href="javascript:;" class="p_pre">下一页</a>-->
+</div>

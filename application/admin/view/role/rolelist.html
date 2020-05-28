@@ -1,0 +1,73 @@
+
+<table class="layui-hide" id="test" lay-filter="test"></table>
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="detail">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<script>
+    layui.use(['table','layer'], function(){
+        var table = layui.table;
+        var layer = layui.layer;
+        table.render({
+            elem: '#test'
+            ,url:'{:url("Brand/brandInfo")}'
+            ,limit: 2
+            ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+            ,cols: [[
+                {field:'brand_id', width:80, title: '品牌id'}
+                ,{field:'brand_name', width:80, title: '品牌名称',edit:'text'}
+                ,{field:'brand_url', width:80, title: '品牌地址',edit:'text'}
+                ,{field:'brand_logo',width:150,title:'品牌logo',templet:'<div><img src="__PUBLIC__/{{d.brand_logo}}"></div>'}
+                ,{field:'brand_describe', title: '品牌介绍',edit:'text'} //minWidth：局部定义当前单元格的最小宽度，layui 2.2.1 新增
+                ,{field:'brand_time',width:200, title: '品牌添加时间'}
+                ,{field:'brand_sort',width:60, title: '排序'}
+                ,{field:'right', width:150,toolbar: '#barDemo', title:'操作'}
+            ]],
+            page: true
+        });
+
+        //既点及改
+        //监听单元格编辑
+        table.on('edit(test)', function(obj){
+            var value = obj.value //得到修改后的值
+                    var data = obj.data //得到所在行所有键值
+                    var field = obj.field; //得到字段
+            $.post(
+                    '{:url("Brand/brandUpdate")}',
+                    {value:value,brand_id:data.brand_id,field:field},
+                    function(msg){
+                        layer.msg(msg.font,{icon:msg.code});
+                    },'json'
+            )
+        });
+
+        //删除和修改
+        table.on('tool(test)', function(obj){ //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            var tr = obj.tr; //获得当前行 tr 的DOM对象
+
+            if(layEvent === 'detail'){ //查看
+                location.href="{:url('Brand/brandUpdateInfo')}?brand_id="+data.brand_id;
+            } else if(layEvent === 'del'){ //删除
+                layer.confirm('真的删除行么', function(index){
+                    $.post(
+                            '{:url("Brand/brandDel")}',
+                            {brand_id:data.brand_id},
+                            function(msg){
+                                console.log(msg);
+                                layer.msg(msg.font,{icon:msg.code});
+                                 if(msg.code==1){
+                                 table.reload('test');
+                                 }
+                            },'json'
+                    )
+                });
+            }
+        })
+    });
+</script>
+<script>
+
+
+</script>

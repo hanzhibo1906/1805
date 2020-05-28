@@ -1,0 +1,61 @@
+<table class="layui-hide" id="test" lay-filter="testdd"></table>
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<script>
+    layui.use(['table','layer'], function(){
+        var table = layui.table;
+        var layer = layui.layer;
+        table.render({
+            elem: '#test'
+            ,url:"{:url('Admin/adminInfo')}"
+            ,limit:2
+            ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+            ,cols: [[
+                {field:'admin_id', width:100, title: 'ID', sort: true}
+                ,{field:'admin_name', width:100, title: '用户名',edit: 'text'}
+                ,{field:'admin_email', width:300, title: '邮箱'}
+                ,{field:'admin_tel', width:270, title: '电话',edit: 'text'}
+                ,{field:'right', width:200,toolbar: '#barDemo', title: '操作'}
+            ]]
+            ,page: true
+        });
+        //监听单元格编辑
+        table.on('edit(testdd)', function(obj){
+            var value = obj.value //得到修改后的值
+                    ,data = obj.data //得到所在行所有键值
+                    ,field = obj.field; //得到字段
+            $.post(
+                    "{:url('Admin/adminUpdate')}",
+                    {value:value,field:field,admin_id:data.admin_id},
+                    function(msg){
+                        layer.msg(msg.font,{icon:msg.code});
+            },'json')
+        });
+
+        table.on('tool(testdd)', function(obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+
+            if (layEvent === 'edit') { //查看
+                location.href="{:url('Admin/adminUpdateInfo')}?admin_id="+data.admin_id;
+            } else if (layEvent === 'del') { //删除
+                layer.confirm('真的删除行么', function (index) {
+                    $.post(
+                            "{:url('Admin/adminDel')}",
+                            {admin_id: data.admin_id},
+                            function (msg) {
+                                console.log(msg);
+                                layer.msg(msg.font,{icon:msg.code});
+                                if(msg.code==1){
+                                    table.reload('test');
+                                }
+                            },
+                    'json'
+                    )
+                });
+            }
+        })
+    })
+</script>

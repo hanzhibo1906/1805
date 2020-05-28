@@ -1,0 +1,91 @@
+<form class="layui-form">
+    <input type="hidden" id='admin_id' name='admin_id' value="{$data.admin_id}">
+    <div class="layui-form-item">
+        <label class="layui-form-label">名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="admin_name" value="{$data.admin_name}"  autocomplete="off" placeholder="请输入名称" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">邮箱</label>
+            <div class="layui-input-inline">
+                <input type="text" name="admin_email"  value="{$data.admin_email}" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <br>
+        <div class="layui-inline">
+            <label class="layui-form-label">手机</label>
+            <div class="layui-input-inline">
+                <input type="tel" name="admin_tel"  value="{$data.admin_tel}" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+
+    <!--<div class="layui-form-item layui-form-text">
+      <label class="layui-form-label">编辑器</label>
+      <div class="layui-input-block">
+        <textarea class="layui-textarea layui-hide" name="content" lay-verify="content" id="LAY_demo_editor"></textarea>
+      </div>
+    </div>-->
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="*">立即修改</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+<script>
+    $(function(){
+        layui.use(['form','layer'], function(){
+            var form = layui.form;
+            var layer = layui.layer;
+
+            //表单验证
+            form.verify({
+                username:function(value,item){   //value表单的值，item表单的属性
+                    var font;
+                    var username_reg = /^[a-z_]\w{3,11}$/i;
+                    var admin_id=$('#admin_id').val();
+                    if(!username_reg.test(value)){
+                        return '用户名数字,字母,下划线,非数字开头,4-12位';
+                    }else{
+                        $.ajax({
+                            url: "{:url('Admin/checkName')}",
+                            type:'post',
+                            data:{admin_name:value,admin_id:admin_id},
+                            async:false,
+                            success:function(msg){
+                                console.log(msg);
+                            }
+                        });
+                        return font;
+                    }
+                },
+            });
+
+            form.on('submit(*)', function(data){
+                //console.log(data.field)
+                $.post(
+                        "{:url('Admin/adminUp')}",
+                        data.field,
+                        function(msg){
+                            console.log(msg);
+                            layer.msg(msg.font,{icon:msg.code});
+                            if(msg.code==1){
+                                location.href="{:url('Admin/adminList')}";
+                            }
+                        },
+                        'json'
+                );
+
+                //console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+            });
+        });
+    })
+
+
+
+</script>

@@ -1,0 +1,122 @@
+<style>
+    .change{
+        width:100px;
+        height:25px;
+        background:pink;
+    }
+</style>
+<table class="layui-table">
+    <thead>
+        <tr>
+            <td>分类id</td>
+            <td>分类名称</td>
+            <td>分类添加时间</td>
+            <td>操作</td>
+        </tr>
+    </thead>
+    <tbody>
+            {volist name='$data' id='v'}
+            <tr class="showHide" pid="{$v.pid}"  cate_id="{$v.cate_id}" style="display:none;">
+                <td>
+                    {:str_repeat('&nbsp;&nbsp;',$v.level*2)}
+                    <a href="#" class="showCate">+</a>
+                    {$v.cate_id}</td>
+                <td>
+                    {:str_repeat('&nbsp;&nbsp;',$v.level*2)}
+                    <span class="showInput">{$v.cate_name}</span>
+                    <input type="text" class="change" column="cate_name" cate_id="{$v.cate_id}" style="display:none;" value="{$v.cate_name}">
+                </td>
+                <td>{$v.cate_time}</td>
+                <td><a class="del" href="#" cate_id="{$v.cate_id}">删除</a>&nbsp;&nbsp;||&nbsp;&nbsp;<a href="{:url('Category/cateUpdate')}?cate_id={$v.cate_id}">修改</a></td>
+            </tr>
+            {/volist}
+    </tbody>
+</table>
+<script>
+    $(function(){
+        layui.use(['layer'],function(){
+            var layer=layui.layer;
+            //页面一加载，只显示pid=0的数据
+            showTr(0);
+            //展示
+            function showTr(cate_id){
+                $('.showHide').each(function(index){
+                    var pid=$(this).attr('pid');
+                    if(pid==cate_id){
+                        $(this).show();
+                    }
+                });
+            }
+            //隐藏
+            function hideTr(cate_id){
+                $('.showHide').each(function(index){
+                    var pid=$(this).attr('pid');
+                    if(pid==cate_id){
+                        $(this).hide();
+                        $(this).find('.showCate').html('+');
+                        var new_cate_id=$(this).attr('cate_id');
+                        hideTr(new_cate_id);
+                    }
+                });
+            }
+
+
+            $(".showCate").click(function(){
+                //获取当前对象文本值
+                var sign=$(this).html();
+                //获取自己id
+                var cate_id=$(this).parents('tr').attr('cate_id');
+                if(sign=="+"){
+                    showTr(cate_id);
+                    $(this).html('-');
+                }else{
+                    hideTr(cate_id);
+                    $(this).html('+');
+                }
+
+            })
+
+            $('.showInput').click(function(){
+                $(this).next('input').show();
+                $(this).hide();
+            });
+
+            $('.del').click(function(){
+                _this=$(this);
+                var cate_id=_this.attr('cate_id');
+                $.post(
+                        '{:url("Category/cateDel")}',
+                        {cate_id:cate_id},
+                        function(msg){
+                            //console.log(msg);
+                            layer.msg(msg.font,{icon:msg.code});
+                            if(msg.code==1){
+                                _this.parents('tr').remove();
+                            }
+                        },'json'
+                )
+            });
+
+            //给文本框加失去焦点事件
+            $('.change').blur(function(){
+                var column=$(this).attr('column');
+                var cate_id=$(this).attr('cate_id');
+                var _this=$(this);
+                var val=$(this).val();
+                $.post(
+                        '{:url("Category/cateChange")}',
+                        {column:column,cate_id:cate_id,val:val},
+                        function(msg){
+                            layer.msg(msg.font,{icon:msg.code});
+                            if(msg.code==1){
+                                _this.hide();
+                                _this.prev('span').html(val);
+                                _this.prev('span').show();
+                            }
+                        },'json'
+                )
+            })
+        })
+
+    })
+</script>

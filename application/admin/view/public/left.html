@@ -1,0 +1,53 @@
+<style>
+    .leftchecked{
+        color: #ff33eb!important;
+        font-weight: bold!important;
+    }
+</style>
+<div class="layui-side layui-bg-black">
+    <div class="layui-side-scroll">
+        <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+        <ul class="layui-nav layui-nav-tree"  lay-filter="test">
+
+            <!--<li class="layui-nav-item layui-nav-itemed">-->
+                <!--<a class="" href="javascript:;">权限节点管理</a>-->
+                <!--<dl class="layui-nav-child">-->
+                    <!--<dd><a href="{:url('Power/poweradd')}">节点添加</a></dd>-->
+                    <!--<dd><a href="{:url('Power/powerList')}">节点列表展示</a></dd>-->
+                <!--</dl>-->
+            <!--</li>-->
+
+            {volist name="AllMenu" id='v'}
+                <?php
+                if( strtolower(request()->controller()) == strtolower(ltrim( $v['node_url'] ,'/' )) ){
+                    echo '<li class="layui-nav-item layui-nav-itemed">';
+                }else{
+                    echo '<li class="layui-nav-item">';
+                }
+                ?>
+                <a class="" href="javascript:;">{$v.node_name}</a>
+                <dl class="layui-nav-child">
+
+                    <?php
+                    if( isset($v['son']) ){ ?>
+                    {volist name="$v.son" id='vv'}
+                    <?php
+                        $action = explode( '/' , trim($vv['node_url'] , '/' )  );
+                        $action_url = strtolower(array_pop( $action ));
+                        if( strtolower(request()->action()) ==  $action_url ){
+                            echo '<dd>
+                            <a class="leftchecked" href="'.url($vv['node_url']).'">'.$vv['node_name'].'</a></dd>';
+                        }else{
+                            echo '<dd><a href="'.url($vv['node_url']).'">'.$vv['node_name'].'</a></dd>';
+                        }
+                    ?>
+                    {/volist}
+                    <?php } ?>
+                </dl>
+                </li>
+            {/volist}
+
+
+        </ul>
+    </div>
+</div>

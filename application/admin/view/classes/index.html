@@ -1,0 +1,50 @@
+<script src="__STATIC__/layui.js"></script>
+<form class="layui-form">
+<div>
+    <div>新加班级<input type="button" id="classes" class="layui-btn" value="+"></div>
+    </br>
+    <div><input type="button" id='btn' class="layui-btn"   lay-submit lay-filter="demo" value="立即提交"><input type="reset" class="layui-btn" value="重置"></div>
+</div>
+</form>
+<script>
+    $(function(){
+        layui.use(['form'],function(){
+
+            var form=layui.form;
+            $(document).on('click','#classes',function(){
+                $(this).after("<div><a>班级名称</a><input type='text' name='class_name[]' class='cla'  style='width:200px;height:35px;' placeholder='请输入班级名称'><input type='button' class='layui-btn' value='添加学生' id='students'><input type='button' class='layui-btn' id='c_del' value='－'></div>")
+            })
+
+            $(document).on('click','#students',function(){
+                $(this).parent('div').append("<div>学生名称<input type='text' name='student_name[]' class='stu'  style='width:200px;height:35px;' placeholder='请输入学生姓名'><input type='button' class='layui-btn' id='s_del' value='－'></div>")
+            })
+            $(document).on('click','#c_del',function(){
+                $(this).parent('div').children().remove();
+            })
+
+            $(document).on('click','#s_del',function(){
+                $(this).parent('div').remove();
+            })
+
+            $(document).on('click','#btn',function(){
+
+            })
+
+            form.on('submit(demo)', function(data){
+                console.log(data.field);
+
+
+                $.post(
+                        '{:url("Classes/index")}',
+                        data.field,
+                        function(msg){
+                            console.log(msg);
+                        }
+                )
+                //console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+            });
+        })
+
+    })
+</script>

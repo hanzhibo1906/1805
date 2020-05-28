@@ -1,0 +1,15 @@
+#支付宝支付
+
+1、支付宝异步通知收不到怎么解决？
+	(1) laravel yii 默认都开启csrf的验证，可能是被框架拦截了    ----  首先自己
+		关闭csrf的验证
+	(2) 服务器拦截 ( iptables 限制、 nginx限制  )	
+		先检查iptable在检查nginx
+	
+	
+
+
+
+# vim 显示行号  :set nu
+# vim 不显示行号   :set nonu
+#     跳转指定行号    :行号

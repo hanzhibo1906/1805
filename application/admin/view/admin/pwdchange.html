@@ -1,0 +1,69 @@
+<form class="layui-form">
+    <input type="hidden" value="{$Think.session.admin.admin_id}" id="admin_id" name="admin_id">
+    <div class="layui-form-item">
+        <label class="layui-form-label">旧密码</label>
+        <div class="layui-input-inline">
+            <input type="password"   lay-verify="required|pwd1" placeholder="请输入" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">新密码</label>
+        <div class="layui-input-inline">
+            <input type="password" name="admin_pwd2" lay-verify="required|pwd2" placeholder="请输入" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">确认密码</label>
+        <div class="layui-input-inline">
+            <input type="password"  lay-verify="required" id='pwd3' placeholder="请输入" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="*">立即修改</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+<script>
+    $(function(){
+        layui.use(['form','layer'],function(){
+            var form=layui.form;
+            var layer=layui.layer;
+            var admin_id=$('#admin_id').val();
+            form.verify({
+                pwd1:function(value,item){
+                    $.post(
+                            "{:url('Admin/pwdChange')}",
+                       {pwd1:value,admin_id:admin_id},
+                        function(msg) {
+                           layer.msg(msg.font,{icon:msg.code});
+                        },'json'
+                    )
+                },
+                pwd2:function(value,item){
+                    var pwdVal=$('#pwd3').val();
+                    if(value!=pwdVal){
+                        return '确认密码必须与密码一致';
+                    }
+                }
+            });
+
+
+            form.on('submit(*)',function(data){
+                $.post(
+                        '{:url("Admin/pwdChangeDo")}',
+                        data.field,
+                        function(msg){
+                            console.log(msg);
+                            layer.msg(msg.font,{icon:msg.code});
+                            if(msg.code==1){
+                                location.href="{:url('Admin/skip')}";
+                            }
+                        },'json'
+                );
+                return false;
+            })
+        })
+    })
+</script>

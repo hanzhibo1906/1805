@@ -1,0 +1,50 @@
+<form class="layui-form">
+    <div class="layui-form-item">
+        <label class="layui-form-label">网站名称</label>
+        <div class="layui-input-inline">
+            <input type="text" name="WEB_NAME" value="{$info.WEB_NAME ?? ''}" lay-verify="required" placeholder="请输入" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">网站网址</label>
+        <div class="layui-input-inline">
+            <input type="text" name="WEB_URL"  value="{$info.WEB_URL ?? ''}" lay-verify="required" placeholder="请输入" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">版权</label>
+        <div class="layui-input-inline">
+            <input type="text" name="WEB_COPYRIGHT"  value="{$info.WEB_COPYRIGHT ?? ''}" lay-verify="required" placeholder="请输入" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">备案号</label>
+        <div class="layui-input-inline">
+            <input type="text" name="WEB_RECORD"  value="{$info.WEB_RECORD ?? ''}"  lay-verify="required" placeholder="请输入" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="*">立即保存</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+<script>
+    $(function(){
+        layui.use(['form','layer'],function(){
+            var form=layui.form;
+            var layer=layui.layer;
+            form.on('submit(*)',function(data){
+                $.post(
+                        '{:url("website/webAdd")}',
+                         data.field,
+                        function(msg){
+                                layer.msg(msg.font,{icon:msg.code});
+                        },'json'
+                )
+                return false;
+            })
+        })
+    })
+</script>

@@ -1,0 +1,33 @@
+<select class="classes" id="province" name="province" style="width:300px;height:50px;background:#f6f6f6;font-size:30px;border:1px solid #d9d9d9;font-family:'宋体';">
+    <option value="" class="">请选择</option>
+    {volist name="data" id="v"}
+    <option value="{$v.class_id}">{$v.class_name}</option>
+    {/volist}
+</select>
+<select class="classes" id="city"  name="city"  style="width:300px;height:50px;background:#f6f6f6;font-size:30px;border:1px solid #d9d9d9;font-family:'宋体';">
+    <option value="">请选择</option>
+</select>
+<script>
+    $(function(){
+        $('.classes').change(function(){
+            var id=$(this).val();
+            var _this=$(this);
+            _this.nextAll('select').html("<option value=''>请选择</option>");
+            //通过ajax把值传到php
+            $.post(
+                    '{:url("Classes/students")}',
+                    {id:id},
+                    function(msg){
+                        if(msg.code==1){
+                            var _option="<option value=''>请选择</option>";
+                            for(var i in msg['info']){
+                                _option+="<option value='"+msg['info'][i]['class_id']+"'>"+msg['info'][i]['class_name']+"</option>";
+                            }
+
+                            _this.next('select').html(_option);
+                        }
+                    },'json'
+            )
+        });
+    })
+</script>

@@ -1,0 +1,109 @@
+<form class="layui-form">
+    <div class="layui-form-item">
+        <label class="layui-form-label">角色名称</label>
+        <div class="layui-input-inline">
+            <input type="text" name="role_name" lay-verify="required" autocomplete="off"
+                   placeholder="请输入角色名称" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">是否启用</label>
+        <div class="layui-input-block">
+            <input type="radio" name="status" value="1" title="是" checked="">
+            <input type="radio" name="status" value="2" title="否">
+        </div>
+    </div>
+    系统权限
+    <hr/>
+    <div style="margin-left: 4%">
+        {volist name="AllMenu" id='v'}
+
+        <div class="layui-form-item" pane="">
+            <label class="layui-form-label">
+                <input type="checkbox" class='parent' name="power[]"
+                       lay-skin="primary" value="{$v.node_id}" title="{$v.node_name}">
+            </label><br/><br/>
+            <div class="layui-input-block">
+                {volist name='$v["son"]' id='vv'}
+                <input type="checkbox" class="aaaaa" name="power[]"
+                       lay-skin="primary" value="{$vv.node_id}" lay-filter="two" title="{$vv.node_name}">
+                {/volist}
+            </div>
+        </div>
+
+
+        {/volist}
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="submit">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+<script>
+    layui.use(['form', 'layer'], function(){
+        var form = layui.form;
+        var layer = layui.layer;
+
+        // 给父级添加点击事件
+        $('.parent').click(function(){
+            if( $(this).prop('checked') ==  true ){
+                $(this).prop('checked' , false);
+                $(this).parents('.layui-form-item').
+                children('.layui-input-block').find('input').prop('checked' , false);
+            }else{
+                $(this).prop('checked' , true);
+                $(this).parents('.layui-form-item').
+                children('.layui-input-block').find('input').prop('checked' , true);
+            }
+            form.render();
+        });
+
+        // 二级菜单添加点击事件
+        form.on('checkbox(two)', function(data){
+            var mark = 0;
+            //获取同级的所有二级菜单是否有选中的，有选中的化，让父级还是选中的状态
+            data.othis.parent('.layui-input-block').find('input').each(function(){
+                if( $(this).prop('checked') == true ){
+                    mark = 1;
+                }
+            });
+
+            if( data.elem.checked == true ){
+                data.elem.checked =  true ;
+                data.othis.parents('.layui-form-item').
+                find('.layui-form-label').find('input').prop('checked' , true);
+            }else{
+                data.elem.checked =  false ;
+                if( mark !=  1 ){
+                    data.othis.parents('.layui-form-item').
+                    find('.layui-form-label').find('input').prop('checked' , false);
+                }
+            }
+            form.render();
+        });
+        form.on('submit(submit)' , function(data){
+
+            $.ajax({
+                url:'{:url(\'Role/roleAdd\')}',
+                data:data.field,
+                type:'post',
+                dataType:'json',
+                success:function( json_info ){
+                    if( json_info.status == 1000 ){
+                        alert(1);
+                    }else{
+                        alert(json_info.msg);
+                    }
+                }
+            })
+            return false;
+        });
+
+    });
+
+</script>

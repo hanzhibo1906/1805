@@ -1,0 +1,78 @@
+<div class="layui-side layui-bg-black">
+    <div class="layui-side-scroll">
+        <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+        <ul class="layui-nav layui-nav-tree"  lay-filter="test">
+
+            <li class="layui-nav-item layui-nav-itemed">
+                <a class="" href="javascript:;">权限节点管理</a>
+                <dl class="layui-nav-child">
+                    <dd><a href="{:url('Power/poweradd')}">节点添加</a></dd>
+                    <dd><a href="{:url('Power/powerList')}">节点列表展示</a></dd>
+                </dl>
+            </li>
+
+            <li class="layui-nav-item ">
+                <a class="" href="javascript:;">分类管理</a>
+                <dl class="layui-nav-child">
+                    <dd><a href="{:url('Category/cateAdd')}">分类添加</a></dd>
+                    <dd><a href="{:url('Category/cateList')}">分类列表展示</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item ">
+                <a href="javascript:;">管理员管理</a>
+                <dl class="layui-nav-child">
+                    <dd><a href="{:url('Admin/adminAdd')}">管理员添加</a></dd>
+                    <dd><a href="{:url('Admin/adminList')}">管理员列表展示</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item ">
+                <a href="javascript:;">用户管理</a>
+                <dl class="layui-nav-child">
+                    <dd><a href="{:url('User/UserShow')}">用户列表展示</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item ">
+                <a href="javascript:;">友联管理</a>
+                <dl class="layui-nav-child">
+                    <dd><a href="{:url('Friend/friendAdd')}">友联添加</a></dd>
+                    <dd><a href="{:url('Friend/friendList')}">友联列表展示</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item ">
+                <a href="javascript:;">商品管理</a>
+                <dl class="layui-nav-child">
+                    <dd><a href="{:url('Goods/goodsAdd')}">商品添加</a></dd>
+                    <dd><a href="{:url('Goods/goodsList')}">商品列表展示</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item ">
+                <a href="javascript:;">品牌管理</a>
+                <dl class="layui-nav-child">
+                    <dd><a href="{:url('Brand/brandAdd')}">添加品牌</a></dd>
+                    <dd><a href="{:url('Brand/brandList')}">品牌列表展示</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item ">
+                <a href="javascript:;">系统设置</a>
+                <dl class="layui-nav-child">
+                    <dd><a href="{:url('Admin/pwdChange')}">修改密码</a></dd>
+                    <dd><a href="{:url('Website/webAdd')}">系统设置</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item ">
+                <a href="javascript:;">班级管理</a>
+                <dl class="layui-nav-child">
+                    <dd><a href="{:url('Classes/index')}">班级添加</a></dd>
+                    <dd><a href="{:url('Classes/classList')}">班级展示</a></dd>
+                </dl>
+            </li>
+        </ul>
+    </div>
+</div>
+<script>
+        $(function(){
+            $(document).on('click','.layui-nav-child dd a',function(){
+                $(this).prop('checked',true);
+            })
+        })
+</script>

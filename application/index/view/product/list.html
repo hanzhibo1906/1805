@@ -1,0 +1,316 @@
+
+<!--Begin Menu Begin-->
+<div class="menu_bg">
+    <div class="menu">
+        <!--Begin 商品分类详情 Begin-->
+        <div class="nav">
+            <div class="nav_t">全部商品分类</div>
+            <div class="leftNav none">
+                <ul>
+                    {volist name="data" id="v"}
+                    <li>
+                        <div class="fj" f="{$key}">
+                            <span class="n_img"><span></span><img src="__STATIC__/index/images/nav1.png" /></span>
+                            <span class="fl">{$v.cate_name}</span>
+                        </div>
+                        <div class="zj">
+                            <div class="zj_l">
+                                {volist name="$v['son']"  id='vv'}
+                                <div class="zj_l_c">
+                                    <h2>{$vv.cate_name}</h2>
+                                    {volist name="$vv['son']" id='vvv'}
+                                    <a href="{:url('Product/productList',['cid'=>$vvv['cate_id']])}">
+                                        {$vvv.cate_name}
+                                    </a>|
+                                    {/volist}
+                                </div>
+                                {/volist}
+                            </div>
+                            <div class="zj_r">
+                                <a href="#"><img src="__STATIC__/index/images/n_img1.jpg" width="236" height="200" /></a>
+                                <a href="#"><img src="__STATIC__/index/images/n_img2.jpg" width="236" height="200" /></a>
+                            </div>
+                        </div>
+                    </li>
+                    {/volist}
+                </ul>
+            </div>
+        </div>
+        <!--End 商品分类详情 End-->
+        <ul class="menu_r">
+            <li><a href="{:url('Index/index')}">首页</a></li>
+            <li><a href="{:url('Product/ProductList')}">全部商品</a></li>
+            <li><a href="__STATIC__/index/Fresh.html">生鲜</a></li>
+            <li><a href="__STATIC__/index/HomeDecoration.html">家居</a></li>
+            <li><a href="__STATIC__/index/SuitDress.html">女装</a></li>
+            <li><a href="__STATIC__/index/MakeUp.html">美妆</a></li>
+            <li><a href="__STATIC__/index/Digital.html">数码</a></li>
+            <li><a href="__STATIC__/index/GroupBuying.html">团购</a></li>
+        </ul>
+        <div class="m_ad">中秋送好礼！</div>
+    </div>
+</div>
+<!--End Menu End-->
+<div class="i_bg">
+    <div class="postion">
+        <span class="fl">全部 > {if condition='$one neq []'}{$one.cate_name}{/if} >
+            {if condition='$two neq []'}{$two.cate_name}{/if} >
+            {if condition='$three neq []'}{$three.cate_name}{/if} </span>
+        <div class="none">
+            <span class="n_ch brand_select"  style="display:none;">
+                <span class="fl">品牌：<font>香奈儿</font></span>
+                <a href="javascipt:;" class="close_brand">
+                    <img src="__STATIC__/index/images/s_close.gif" />
+                </a>
+            </span>
+            <span class="n_ch price_select"  style="display:none;">
+                <span class="fl">价格：<font>200-399</font></span>
+                <a href="javascript:;" class="close_price">
+                    <img src="__STATIC__/index/images/s_close.gif" />
+                </a>
+            </span>
+        </div>
+    </div>
+    <!--Begin 筛选条件 Begin-->
+    <div class="content mar_10">
+        <table border="0" class="choice" style="width:100%; font-family:'宋体'; margin:0 auto;" cellspacing="0" cellpadding="0">
+            <tr valign="top">
+                <td width="70">&nbsp; 品牌：</td>
+                <td class="td_a brand">
+                    {volist name='brand' id='v'}
+                    <a href="javascript:;" brand_id="{$v.brand_id}">{$v.brand_name}</a>
+                    {/volist}
+                </td>
+            </tr>
+            <tr valign="top" id="price_select">
+                <td>&nbsp; 价格：</td>
+                <td class="td_a price">
+                    {volist name='money' id='v'}
+                        <a href="javascript:;">{$v}</a>
+                    {/volist}
+                </td>
+            </tr>
+            <!--<tr>-->
+                <!--<td>&nbsp; 类型：</td>-->
+                <!--<td class="td_a"><a href="javascript:;">女士香水</a><a href="javascript:;">男士香水</a><a href="javascript:;">Q版香水</a><a href="javascript:;">组合套装</a><a href="javascript:;">香体走珠</a><a href="javascript:;">其它</a></td>-->
+            <!--</tr>-->
+            <!--<tr>-->
+                <!--<td>&nbsp; 香型：</td>-->
+                <!--<td class="td_a"><a href="javascript:;">浓香水</a><a href="javascript:;">香精Parfum香水</a><a href="javascript:;">淡香精EDP淡香水</a><a href="javascript:;">香露EDT</a><a href="javascript:;">古龙水</a><a href="javascript:;">其它</a></td>-->
+            <!--</tr>-->
+        </table>
+    </div>
+    <!--End 筛选条件 End-->
+
+    <div class="content mar_20">
+        <div class="l_history">
+            <div class="his_t">
+                <span class="fl">浏览历史</span>
+                <span class="fr"><a href="javascript:;">清空</a></span>
+            </div>
+            <ul>
+                <li>
+                    <div class="img"><a href="javascript:;"><img src="__STATIC__/index/images/his_1.jpg" width="185" height="162" /></a></div>
+                    <div class="name"><a href="javascript:;">Dior/迪奥香水2件套装</a></div>
+                    <div class="price">
+                        <font>￥<span>368.00</span></font> &nbsp; 18R
+                    </div>
+                </li>
+                <li>
+                    <div class="img"><a href="javascript:;"><img src="__STATIC__/index/images/his_2.jpg" width="185" height="162" /></a></div>
+                    <div class="name"><a href="javascript:;">Dior/迪奥香水2件套装</a></div>
+                    <div class="price">
+                        <font>￥<span>768.00</span></font> &nbsp; 18R
+                    </div>
+                </li>
+                <li>
+                    <div class="img"><a href="javascript:;"><img src="__STATIC__/index/images/his_3.jpg" width="185" height="162" /></a></div>
+                    <div class="name"><a href="javascript:;">Dior/迪奥香水2件套装</a></div>
+                    <div class="price">
+                        <font>￥<span>680.00</span></font> &nbsp; 18R
+                    </div>
+                </li>
+                <li>
+                    <div class="img"><a href="javascript:;"><img src="__STATIC__/index/images/his_4.jpg" width="185" height="162" /></a></div>
+                    <div class="name"><a href="javascript:;">Dior/迪奥香水2件套装</a></div>
+                    <div class="price">
+                        <font>￥<span>368.00</span></font> &nbsp; 18R
+                    </div>
+                </li>
+                <li>
+                    <div class="img"><a href="javascript:;"><img src="__STATIC__/index/images/his_5.jpg" width="185" height="162" /></a></div>
+                    <div class="name"><a href="javascript:;">Dior/迪奥香水2件套装</a></div>
+                    <div class="price">
+                        <font>￥<span>368.00</span></font> &nbsp; 18R
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="l_list">
+            <div class="list_t">
+            	<span class="fl list_or">
+                	<a href="javascript:;" order="1" class="now">默认</a>
+                    <a href="javascript:;" order="2">
+                        <span class="fl">销量<span class="a">↑</span></span>
+                    </a>
+                    <a href="javascript:;" order="3">
+                        <span class="fl">价格<span class="a">↑</span></span>
+                    </a>
+                    <a href="javascript:;" order="4">新品</a>
+                </span>
+                <span class="fr">共发现120件</span>
+            </div>
+            <div class="list_c" id="productlist">
+                {include file="product/product" /}
+            </div>
+        </div>
+    </div>
+
+<script type="text/javascript">
+    $('.brand a').click(function(){
+        $('.brand a').removeClass('now');
+        $('.price a').removeClass('now');
+        $(this).addClass('now');
+        $('.brand_select font').text( $(this).text() );
+        $('.brand_select').show();
+        $('.brand_select').parent().show();
+
+        getAjaxPage( 1 );
+
+        // 点击品牌的时候，让价格筛选的样式消失
+        $('.price_select').hide();
+
+    })
+
+    $('.close_brand').click(function(){
+        $('.brand a').removeClass('now');
+        $(this).parents('.brand_select').hide();
+        getAjaxPage( 1 );
+    });
+
+    function getAjaxPage( type , order_field , order_type ){
+        // 获取是否选中品牌
+        var brand_id = $('.brand').find('.now').attr('brand_id');
+        var price = $('.price').find('.now').text();
+
+
+        var data = '';
+        if( brand_id != '' && brand_id != undefined ){
+            data = 'brand_id='+brand_id;
+        }
+
+        if( price != '' && price != undefined ){
+            if(data != '' ){
+                data += '&';
+            }
+            data += 'price='+price;
+        }
+
+        if( order_field != '' ){
+            if(data != '' ){
+                data += '&';
+            }
+            data += 'order_field='+order_field+'&order_type='+order_type;
+        }
+
+        // 点击品牌 价格跟着改变
+        if( type == 1 ){
+
+            $.ajax({
+                url:"{:url('product/showMoneySelect',['cid' => request() -> param('cid')] )}",
+                data:data,
+                type:'post',
+                dataType:'json',
+                success:function( html_info ){
+                    $('#price_select').html(html_info);
+                }
+            });
+        }
+
+        // ajax请求筛选对应品牌下边的商品
+        $.ajax({
+            url:"{:url('product/productList',['cid' => request() -> param('cid')] )}",
+            data:data,
+            type:'post',
+            dataType:'json',
+            success:function( html_info ){
+                $('#productlist').html(html_info);
+            }
+        })
+    }
+
+
+
+    $(document).on('click' , '.price a' ,  function(){
+        $('.price a').removeClass('now');
+        $(this).addClass('now');
+        $('.price_select').show();
+        $('.price_select').parent().show();
+        $('.price_select font').text( $(this).text());
+        getAjaxPage( 2 );
+    });
+
+    $('.close_price').click(function(){
+        $('.price a').removeClass('now');
+        $(this).parents('.price_select').hide();
+        getAjaxPage( 2 );
+    })
+
+
+
+    // 排序功能
+    $('.list_or a').click(function(){
+        $('.list_or a').removeClass('now');
+        $(this).addClass('now');
+        var order_field = $(this).attr('order');
+        var order_type = 0;
+        if(order_field == 2 || order_field == 3 ){
+            var type = $(this).find('.a').text();
+            if(  type == '↓'){
+                // 1 正序 2 倒序
+                order_type = 1;
+                $(this).find('.a').text('↑');
+            }else{
+                order_type = 2;
+                $(this).find('.a').text('↓');
+            }
+        }
+
+        getAjaxPage( 2 , order_field , order_type );
+
+    })
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

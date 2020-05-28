@@ -1,0 +1,86 @@
+<form class="layui-form" action="">
+    <div class="layui-form-item">
+        <label class="layui-form-label">分类名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="cate_name" lay-verify="required|username" autocomplete="off" placeholder="请输入名称" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">是否展示</label>
+        <div class="layui-input-block">
+            <input type="radio" name="cate_show" value="1" title="是" checked="">
+            <input type="radio" name="cate_show" value="0" title="否">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">是否在地址栏展示</label>
+        <div class="layui-input-block">
+            <input type="radio" name="cate_navshow" value="1" title="是" checked="">
+            <input type="radio" name="cate_navshow" value="0" title="否">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">分类类型</label>
+        <div class="layui-input-inline">
+            <select name="pid">
+                <option value="0">--请选择--</option>
+                {volist name='data' id='v'}
+                <option value="{$v.cate_id}">{:str_repeat('&nbsp;&nbsp;',$v.level*2)}{$v.cate_name}</option>
+                {/volist}
+            </select>
+        </div>
+    </div>
+    <!--<div class="layui-form-item layui-form-text">
+      <label class="layui-form-label">编辑器</label>
+      <div class="layui-input-block">
+        <textarea class="layui-textarea layui-hide" name="content" lay-verify="content" id="LAY_demo_editor"></textarea>
+      </div>
+    </div>-->
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="*">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+<!-- 示例-970 -->
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+<script>
+    layui.use(['form', 'layer'], function(){
+        var form = layui.form
+                ,layer = layui.layer;
+        //自定义验证规则
+        form.verify({
+            username:function(value,item){
+                    $.ajax({
+                        url:"{:url('Category/checkName')}",
+                        type:'post',
+                        dataType:'json',
+                        data:{cate_name:value},
+                        success:function(msg){
+                            layer.msg(msg.font,{icon:msg.code});
+                        }
+                    })
+                }
+
+        })
+        //监听提交
+        form.on('submit(*)',function(data){
+            $.post(
+                    "{:url('Category/categoryAdd')}",
+                    data.field,
+                    function(msg){
+                        console.log(msg);
+                        layer.msg(msg.font,{icon:msg.code});
+                        if(msg.code==1){
+                            location.href="{:url('Category/cateList')}";
+                        }
+                    },'json'
+            )
+            return false;
+        })
+
+
+    });
+</script>
+

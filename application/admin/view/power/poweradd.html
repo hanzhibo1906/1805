@@ -1,0 +1,72 @@
+<form class="layui-form">
+    <div class="layui-form-item">
+        <label class="layui-form-label">节点名称</label>
+        <div class="layui-input-inline">
+            <input type="text" name="node_name" lay-verify="required" autocomplete="off"
+                   placeholder="请输入节点名称" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">节点路径</label>
+            <div class="layui-input-inline">
+                <input type="text" name="node_url" lay-verify="required"
+                       placeholder="请输入节点路径"   autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">父级权限</label>
+        <div class="layui-input-inline">
+            <select name="pid" >
+                <option value="">请选择</option>
+                {volist name="menu" id='v'}
+                <option value="{$v.node_id}">{$v.node_name}</option>
+                {/volist}
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">是否启用</label>
+        <div class="layui-input-block">
+            <input type="radio" name="status" value="1" title="是" checked="">
+            <input type="radio" name="status" value="0" title="否">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="*">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+<script>
+    $(function(){
+        layui.use(['form', 'layer'], function(){
+            var form = layui.form;
+            var  layer = layui.layer;
+
+            //监听提交
+            form.on('submit(*)', function(data){
+
+                $.post(
+                        '{:url("Power/PowerAdd")}',
+                        data.field,
+                        function( data ){
+                            if( data.status == 1000 ){
+                                alert('ok');
+                            }else{
+                                alert(data.msg);
+                            }
+                        },'json'
+                )
+                return false;
+            });
+
+        });
+    })
+
+</script>

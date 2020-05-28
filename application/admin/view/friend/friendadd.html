@@ -1,0 +1,97 @@
+<form class="layui-form">
+    <div class="layui-form-item">
+        <label class="layui-form-label">友联名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="name" lay-verify="required" autocomplete="off" placeholder="请输入名称" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">友联地址</label>
+            <div class="layui-input-inline">
+                <input type="text" name="url" lay-verify="required|url" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <input type="hidden" id="logo" name="logo">
+            <label class="layui-form-label">logo</label>
+            <button type="button" class="layui-btn" id="myload">
+                <i class="layui-icon">&#xe67c;</i>上传图片
+            </button>
+        </div>
+    </div>
+    <!--<div class="layui-form-item layui-form-text">
+      <label class="layui-form-label">编辑器</label>
+      <div class="layui-input-block">
+        <textarea class="layui-textarea layui-hide" name="content" lay-verify="content" id="LAY_demo_editor"></textarea>
+      </div>
+    </div>-->
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="*">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+<script>
+    $(function() {
+        layui.use(['form', 'layer','upload'], function () {
+            var form = layui.form;
+            var layer = layui.layer;
+            var upload=layui.upload;
+            //自定义验证规则
+            form.verify({
+                nam: function (value,item) {
+                    $.ajax({
+                        url:"{:url('Friend/checkName')}",
+                        type:'post',
+                        dataType:'json',
+                        data:{f_name:value},
+                        success:function(msg){
+                            console.log(msg);
+                            layer.msg(msg.font,{icon:msg.code});
+                        },
+                    });
+                }
+            });
+
+            //文件上传
+            var uploadInst = upload.render({
+                elem: '#myload' //绑定元素
+                ,url: '{:url("Friend/friendLoad")}' //上传接口
+                ,done: function(res){
+                    //console.log(res);
+                    //上传完毕回调
+                    layer.msg(res.font,{icon:res.code});
+                    if(res.code==1){
+                        $('#logo').val(res.src);
+                    }
+                }
+                ,error: function(){
+                    //请求异常回调
+                }
+            });
+            //监听提交
+            form.on('submit(*)', function (data) {
+                $.post(
+                        "{:url('Friend/friendAdd')}",
+                        data.field,
+                        function (msg) {
+                            console.log(msg);
+                            layer.msg(msg.font,{icon:msg.code});
+                        if(msg.code==1){
+                            location.href="{:url('Friend/friendList')}";
+                        }
+                    },'json'
+            );
+                return false;
+        });
+
+
+
+    });
+   })
+</script>

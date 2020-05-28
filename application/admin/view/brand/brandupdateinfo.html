@@ -1,0 +1,129 @@
+<form class="layui-form">
+    <input type="hidden" value="{$data.brand_id}" id="brand_id" name="brand_id">
+    <div class="layui-form-item">
+        <label class="layui-form-label">品牌名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="brand_name" value="{$data.brand_name}" lay-verify="required|username" autocomplete="off" placeholder="请输入名称" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">品牌地址</label>
+            <div class="layui-input-inline">
+                <input type="tel" name="brand_url" value="{$data.brand_url}" lay-verify="required" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <input type="hidden" id="logo" name="brand_logo">
+            <label class="layui-form-label">logo</label>
+            <button type="button" class="layui-btn" id="myload">
+                <i class="layui-icon">&#xe67c;</i>上传图片
+            </button>
+        </div>
+    </div>
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">品牌介绍</label>
+        <div class="layui-input-block">
+            <textarea placeholder="请输入内容" value="{$data.brand_describe}" name="brand_describe" class="layui-textarea" lay-verify="required">{$data.brand_describe}</textarea>
+        </div>
+    </div>
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">排序</label>
+        <div class="layui-input-block">
+            <input type="number" name="brand_sort" value="{$data.brand_sort}" lay-verify="required" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">是否展示</label>
+        <div class="layui-input-block">
+            {if condition="$data.brand_show==1"}
+            <input type="radio" name="brand_show" value="1" title="是" checked>
+            <input type="radio" name="brand_show" value="0" title="否">
+            {else/}
+            <input type="radio" name="brand_show" value="1" title="是">
+            <input type="radio" name="brand_show" value="0" title="否" checked>
+            {/if}
+        </div>
+    </div>
+
+    <!--<div class="layui-form-item layui-form-text">
+      <label class="layui-form-label">编辑器</label>
+      <div class="layui-input-block">
+        <textarea class="layui-textarea layui-hide" name="content" lay-verify="content" id="LAY_demo_editor"></textarea>
+      </div>
+    </div>-->
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="*">立即添加</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+
+<!-- 示例-970 -->
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+<script>
+    $(function(){
+        layui.use(['form','layer','upload'], function(){
+            var form = layui.form;
+            var layer = layui.layer;
+            var upload = layui.upload;
+            var brand_id=$('#brand_id').val();
+            form.verify({
+                username:function(value,item){
+                    var username_reg=/^.+|[\u4e00-\u9fa5]+$/i;
+                    if(!username_reg.test(value)){
+                        return  '品牌名称格式错误';
+                    }else{
+                        $.ajax({
+                            url:"{:url('Brand/checkName')}",
+                            type:'post',
+                            dataType:'json',
+                            data:{brand_name:value,brand_id:brand_id},
+                            success:function(msg){
+                                layer.msg(msg.font,{icon:msg.code});
+                            }
+                        })
+
+                    }
+
+                }
+            });
+
+            //文件上传
+            var uploadInst = upload.render({
+                elem: '#myload' //绑定元素
+                ,url: '{:url("Brand/brandUpload")}' //上传接口
+                ,done: function(res){
+                    //上传完毕回调
+                    //console.log(msg);
+                    layer.msg(res.font,{icon:res.code});
+                    if(res.code==1){
+                        $('#logo').val(res.src);
+                    }
+                }
+                ,error: function(){
+                    //请求异常回调
+                }
+            });
+            //监听提交
+            form.on('submit(*)',function(data){
+                $.post(
+                        "{:url('Brand/brandUp')}",
+                        data.field,
+                        function(msg){
+                            console.log(msg);
+                            layer.msg(msg.font,{icon:msg.code});
+                            if(msg.code==1){
+                                location.href="{:url('Brand/brandList')}";
+                            }
+                        },'json'
+                )
+                return false;
+            })
+        });
+    })
+
+</script>
